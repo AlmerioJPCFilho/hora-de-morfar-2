@@ -16,7 +16,7 @@ preto = (0, 0, 0)
 largura_tela = 1280
 altura_tela = 720
 tela = pygame.display.set_mode((largura_tela, altura_tela))
-pygame.display.set_caption('McLovin')
+pygame.display.set_caption('The adventures of McLovin')
 fullscreen = False
 
 # RELOGIO
@@ -38,29 +38,32 @@ background = pygame.image.load(os.path.join(diretorio_imagens, 'imagem-fundo.png
 background = pygame.transform.scale(background, (largura_tela, altura_tela))
 
 #SONS
-musica_jogando = pygame.mixer.Sound(os.path.join(diretorio_audios, 'jonny-fabisak-blocky-blues.mp3'))
+musica_titulo = pygame.mixer.Sound(os.path.join(diretorio_audios, 'jonny-fabisak-title-cube.mp3'))
+musica_jogo = pygame.mixer.Sound(os.path.join(diretorio_audios, 'jonny-fabisak-blocky-blues.mp3'))
+musica_jogo.set_volume(0.5)
+musica_jogo_rodando = False
 som_coleta1 = pygame.mixer.Sound(os.path.join(diretorio_audios, 'cube-sfx-1.mp3'))
 som_coleta2 = pygame.mixer.Sound(os.path.join(diretorio_audios, 'cube-sfx-2.mp3'))
 som_coleta3 = pygame.mixer.Sound(os.path.join(diretorio_audios, 'cube-sfx-3.mp3'))
 som_morte = pygame.mixer.Sound(os.path.join(diretorio_audios, 'som-morte.mp3'))
-som_morte.set_volume(0.2)
+som_morte.set_volume(0.5)
 
 # PERSONAGEM
 sprite_sheet = pygame.image.load(os.path.join(diretorio_imagens, 'sprite-mclovin.png')).convert_alpha()
-MacLovin = Personagem(sprite_sheet, largura_tela, altura_tela, fullscreen)
-todas_sprites.add(MacLovin)
+McLovin = Personagem(sprite_sheet, largura_tela, altura_tela, fullscreen)
+todas_sprites.add(McLovin)
 
 # COLETAVEIS
 # Carteira
 sprite_carteira = pygame.image.load(os.path.join(diretorio_imagens, 'identidade.png')).convert()
-carteira = Coletaveis(largura_tela, altura_tela, sprite_carteira, MacLovin, fullscreen)
+carteira = Coletaveis(largura_tela, altura_tela, sprite_carteira, McLovin, fullscreen)
 todas_sprites.add(carteira)
 grupo_carteira = pygame.sprite.Group()
 grupo_carteira.add(carteira)
 
 # Cerveja
 sprite_cerveja = pygame.image.load(os.path.join(diretorio_imagens, 'cerveja.png')).convert_alpha()
-cerveja = Coletaveis(largura_tela, altura_tela, sprite_cerveja, MacLovin, fullscreen)
+cerveja = Coletaveis(largura_tela, altura_tela, sprite_cerveja, McLovin, fullscreen)
 todas_sprites.add(cerveja)
 grupo_cerveja = pygame.sprite.Group()
 grupo_cerveja.add(cerveja)
@@ -71,7 +74,7 @@ def recomecar_jogo():
     pontos_carteira = 0
     pontos_cerveja = 0
     jogadorMorreu = False
-    MacLovin.rect.center = (200,altura_tela - 100)
+    McLovin.rect.center = (200,altura_tela - 100)
 
 
 # PONTUAÇÃO
@@ -86,7 +89,9 @@ transformartelademorte = pygame.transform.scale(telademorte, (1280, 720))
 jogadorMorreu = False
 
 def gameOver(tela, transformartelademorte):
-    global jogadorMorreu
+    global jogadorMorreu, musica_jogo_rodando
+    musica_jogo.stop()
+    musica_jogo_rodando = False
     som_morte.play()
     esperando_reiniciar = True
     while esperando_reiniciar:
@@ -102,15 +107,19 @@ def gameOver(tela, transformartelademorte):
                 if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
                     esperando_reiniciar = False
                     try:
+                        som_morte.stop()
                         recomecar_jogo()
                     except:
                         print("O jogo não pôde ser reiniciado.")
 
 def jogo():
-    global pontos_carteira, pontos_cerveja, jogadorMorreu, som_coleta1, som_coleta2
+    global pontos_carteira, pontos_cerveja, jogadorMorreu, som_coleta1, som_coleta2, som_coleta3, musica_jogo_rodando
     while True:
         if jogadorMorreu:
             gameOver(tela, transformartelademorte)
+        if not musica_jogo_rodando:
+            musica_jogo.play(-1)
+            musica_jogo_rodando = True
         relogio.tick(60)
         tela.fill(preto)
         tela.blit(background, (0, 0))
@@ -129,24 +138,24 @@ def jogo():
 
         # movimentação do retangulo
         if pygame.key.get_pressed()[K_a]:
-            MacLovin.mover_esquerda()
+            McLovin.mover_esquerda()
         if pygame.key.get_pressed()[K_d]:
-            MacLovin.mover_direita()
+            McLovin.mover_direita()
         if pygame.key.get_pressed()[K_w]:
-            MacLovin.mover_cima()
+            McLovin.mover_cima()
         if pygame.key.get_pressed()[K_s]:
-            MacLovin.mover_baixo()
+            McLovin.mover_baixo()
 
         # colisão
         colisao_carteira = pygame.sprite.spritecollide(
-            MacLovin, grupo_carteira, False, pygame.sprite.collide_mask)
+            McLovin, grupo_carteira, False, pygame.sprite.collide_mask)
         if colisao_carteira:
             som_coleta1.play()
             carteira.colidiu = True
             pontos_carteira += 1
 
         colisao_cerveja = pygame.sprite.spritecollide(
-            MacLovin, grupo_cerveja, False, pygame.sprite.collide_mask)
+            McLovin, grupo_cerveja, False, pygame.sprite.collide_mask)
         if colisao_cerveja:
             som_coleta3.play()
             cerveja.colidiu = True
