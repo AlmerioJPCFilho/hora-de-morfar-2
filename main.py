@@ -25,6 +25,7 @@ relogio = pygame.time.Clock()
 # DIRETORIOS
 diretorio_principal = os.path.dirname(__file__)
 diretorio_imagens = os.path.join(diretorio_principal, 'imagens')
+diretorio_audios = os.path.join(diretorio_principal, 'audios')
 
 # FONTES
 fonte = pygame.font.SysFont('arial', 30, True, False)
@@ -33,31 +34,25 @@ fonte = pygame.font.SysFont('arial', 30, True, False)
 # SPRITES
 todas_sprites = pygame.sprite.Group()
 sprites_coletaveis = pygame.sprite.Group()
-background = pygame.image.load(os.path.join(
-    diretorio_imagens, 'imagem_fundo.png')).convert()
+background = pygame.image.load(os.path.join(diretorio_imagens, 'imagem_fundo.png')).convert()
 background = pygame.transform.scale(background, (largura_tela, altura_tela))
 
 # PERSONAGEM
-sprite_sheet = pygame.image.load(os.path.join(
-    diretorio_imagens, 'sprite_maclovin.png')).convert_alpha()
+sprite_sheet = pygame.image.load(os.path.join(diretorio_imagens, 'sprite_maclovin.png')).convert_alpha()
 MacLovin = Personagem(sprite_sheet, largura_tela, altura_tela, fullscreen)
 todas_sprites.add(MacLovin)
 
 # COLETAVEIS
 # Carteira
-sprite_carteira = pygame.image.load(os.path.join(
-    diretorio_imagens, 'carteira.png')).convert()
-carteira = Coletaveis(largura_tela, altura_tela,
-                      sprite_carteira, MacLovin, fullscreen)
+sprite_carteira = pygame.image.load(os.path.join(diretorio_imagens, 'carteira.png')).convert()
+carteira = Coletaveis(largura_tela, altura_tela, sprite_carteira, MacLovin, fullscreen)
 todas_sprites.add(carteira)
 grupo_carteira = pygame.sprite.Group()
 grupo_carteira.add(carteira)
 
 # Cerveja
-sprite_cerveja = pygame.image.load(os.path.join(
-    diretorio_imagens, 'cerveja.png')).convert_alpha()
-cerveja = Coletaveis(largura_tela, altura_tela,
-                     sprite_cerveja, MacLovin, fullscreen)
+sprite_cerveja = pygame.image.load(os.path.join(diretorio_imagens, 'cerveja.png')).convert_alpha()
+cerveja = Coletaveis(largura_tela, altura_tela, sprite_cerveja, MacLovin, fullscreen)
 todas_sprites.add(cerveja)
 grupo_cerveja = pygame.sprite.Group()
 grupo_cerveja.add(cerveja)
@@ -78,18 +73,16 @@ img_carteira_pt = pygame.transform.scale(
 
 
 pontos_cerveja = 0
-img_cerveja_pt = pygame.transform.scale(
-    sprite_cerveja, (sprite_cerveja.get_width() // 12, sprite_cerveja.get_height() // 12))
+img_cerveja_pt = pygame.transform.scale(sprite_cerveja, (sprite_cerveja.get_width() // 12, sprite_cerveja.get_height() // 12))
 jogadorMorreu = False
-telademorte = pygame.image.load('imagens/tela-de-derrota.png')
+telademorte = pygame.image.load(os.path.join(diretorio_imagens, 'tela-de-derrota.png')).convert()
 transformartelademorte = pygame.transform.scale(telademorte, (1280, 720))
 jogadorMorreu = False
-
 
 def gameOver(tela, transformartelademorte):
     global jogadorMorreu
     tela.blit(transformartelademorte, (0, 0))
-    som_morte = pygame.mixer.Sound('somdemorte.mp3')
+    som_morte = pygame.mixer.Sound(os.path.join(diretorio_audios, 'somdemorte.mp3'))
     som_morte.set_volume(0.2)
     som_morte.play()
     pygame.display.update()
@@ -105,9 +98,10 @@ def gameOver(tela, transformartelademorte):
                 except:
                     print("O jogo não pôde ser reiniciado.")
 
-
+som_coleta = pygame.mixer.Sound(os.path.join(diretorio_audios, 'Cube Sfx 1.mp3'))
+musica_jogando = pygame.mixer.Sound(os.path.join(diretorio_audios, 'Jonny Fabisak-Blocky Blues.mp3'))
 def jogo():
-    global pontos_carteira, pontos_cerveja, jogadorMorreu
+    global pontos_carteira, pontos_cerveja, jogadorMorreu, som_coleta
     while True:
         while jogadorMorreu:
             gameOver(tela, transformartelademorte)
@@ -141,12 +135,14 @@ def jogo():
         colisao_carteira = pygame.sprite.spritecollide(
             MacLovin, grupo_carteira, False, pygame.sprite.collide_mask)
         if colisao_carteira:
+            som_coleta.play()
             carteira.colidiu = True
             pontos_carteira += 1
 
         colisao_cerveja = pygame.sprite.spritecollide(
             MacLovin, grupo_cerveja, False, pygame.sprite.collide_mask)
         if colisao_cerveja:
+            som_coleta.play()
             cerveja.colidiu = True
             pontos_cerveja += 1
 
