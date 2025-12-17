@@ -16,7 +16,7 @@ preto = (0, 0, 0)
 largura_tela = 1280
 altura_tela = 720
 tela = pygame.display.set_mode((largura_tela, altura_tela))
-pygame.display.set_caption('MacLovin')
+pygame.display.set_caption('McLovin')
 fullscreen = False
 
 # RELOGIO
@@ -34,25 +34,25 @@ fonte = pygame.font.SysFont('arial', 30, True, False)
 # SPRITES
 todas_sprites = pygame.sprite.Group()
 sprites_coletaveis = pygame.sprite.Group()
-background = pygame.image.load(os.path.join(diretorio_imagens, 'imagem_fundo.png')).convert()
+background = pygame.image.load(os.path.join(diretorio_imagens, 'imagem-fundo.png')).convert()
 background = pygame.transform.scale(background, (largura_tela, altura_tela))
 
 #SONS
-musica_jogando = pygame.mixer.Sound(os.path.join(diretorio_audios, 'Jonny Fabisak-Blocky Blues.mp3'))
-som_coleta1 = pygame.mixer.Sound(os.path.join(diretorio_audios, 'Cube Sfx 1.mp3'))
-som_coleta2 = pygame.mixer.Sound(os.path.join(diretorio_audios, 'Cube Sfx 2.mp3'))
-som_coleta3 = pygame.mixer.Sound(os.path.join(diretorio_audios, 'Cube Sfx 3.mp3'))
-som_morte = pygame.mixer.Sound(os.path.join(diretorio_audios, 'somdemorte.mp3'))
+musica_jogando = pygame.mixer.Sound(os.path.join(diretorio_audios, 'jonny-fabisak-blocky-blues.mp3'))
+som_coleta1 = pygame.mixer.Sound(os.path.join(diretorio_audios, 'cube-sfx-1.mp3'))
+som_coleta2 = pygame.mixer.Sound(os.path.join(diretorio_audios, 'cube-sfx-2.mp3'))
+som_coleta3 = pygame.mixer.Sound(os.path.join(diretorio_audios, 'cube-sfx-3.mp3'))
+som_morte = pygame.mixer.Sound(os.path.join(diretorio_audios, 'som-morte.mp3'))
 som_morte.set_volume(0.2)
 
 # PERSONAGEM
-sprite_sheet = pygame.image.load(os.path.join(diretorio_imagens, 'sprite_maclovin.png')).convert_alpha()
+sprite_sheet = pygame.image.load(os.path.join(diretorio_imagens, 'sprite-mclovin.png')).convert_alpha()
 MacLovin = Personagem(sprite_sheet, largura_tela, altura_tela, fullscreen)
 todas_sprites.add(MacLovin)
 
 # COLETAVEIS
 # Carteira
-sprite_carteira = pygame.image.load(os.path.join(diretorio_imagens, 'carteira.png')).convert()
+sprite_carteira = pygame.image.load(os.path.join(diretorio_imagens, 'identidade.png')).convert()
 carteira = Coletaveis(largura_tela, altura_tela, sprite_carteira, MacLovin, fullscreen)
 todas_sprites.add(carteira)
 grupo_carteira = pygame.sprite.Group()
@@ -81,7 +81,7 @@ img_carteira_pt = pygame.transform.scale(sprite_carteira, (sprite_carteira.get_w
 pontos_cerveja = 0
 img_cerveja_pt = pygame.transform.scale(sprite_cerveja, (sprite_cerveja.get_width() // 12, sprite_cerveja.get_height() // 12))
 jogadorMorreu = False
-telademorte = pygame.image.load(os.path.join(diretorio_imagens, 'tela-de-derrota.png')).convert()
+telademorte = pygame.image.load(os.path.join(diretorio_imagens, 'tela-derrota.png')).convert()
 transformartelademorte = pygame.transform.scale(telademorte, (1280, 720))
 jogadorMorreu = False
 
