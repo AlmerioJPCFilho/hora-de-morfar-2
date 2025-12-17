@@ -37,6 +37,14 @@ sprites_coletaveis = pygame.sprite.Group()
 background = pygame.image.load(os.path.join(diretorio_imagens, 'imagem_fundo.png')).convert()
 background = pygame.transform.scale(background, (largura_tela, altura_tela))
 
+#SONS
+musica_jogando = pygame.mixer.Sound(os.path.join(diretorio_audios, 'Jonny Fabisak-Blocky Blues.mp3'))
+som_coleta1 = pygame.mixer.Sound(os.path.join(diretorio_audios, 'Cube Sfx 1.mp3'))
+som_coleta2 = pygame.mixer.Sound(os.path.join(diretorio_audios, 'Cube Sfx 2.mp3'))
+som_coleta3 = pygame.mixer.Sound(os.path.join(diretorio_audios, 'Cube Sfx 3.mp3'))
+som_morte = pygame.mixer.Sound(os.path.join(diretorio_audios, 'somdemorte.mp3'))
+som_morte.set_volume(0.2)
+
 # PERSONAGEM
 sprite_sheet = pygame.image.load(os.path.join(diretorio_imagens, 'sprite_maclovin.png')).convert_alpha()
 MacLovin = Personagem(sprite_sheet, largura_tela, altura_tela, fullscreen)
@@ -68,9 +76,7 @@ def recomecar_jogo():
 
 # PONTUAÇÃO
 pontos_carteira = 0
-img_carteira_pt = pygame.transform.scale(
-    sprite_carteira, (sprite_carteira.get_width() // 12, sprite_carteira.get_height() // 12))
-
+img_carteira_pt = pygame.transform.scale(sprite_carteira, (sprite_carteira.get_width() // 12, sprite_carteira.get_height() // 12))
 
 pontos_cerveja = 0
 img_cerveja_pt = pygame.transform.scale(sprite_cerveja, (sprite_cerveja.get_width() // 12, sprite_cerveja.get_height() // 12))
@@ -81,29 +87,29 @@ jogadorMorreu = False
 
 def gameOver(tela, transformartelademorte):
     global jogadorMorreu
-    tela.blit(transformartelademorte, (0, 0))
-    som_morte = pygame.mixer.Sound(os.path.join(diretorio_audios, 'somdemorte.mp3'))
-    som_morte.set_volume(0.2)
     som_morte.play()
-    pygame.display.update()
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            jogadorMorreu = False
-            pygame.quit()
-            exit()
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
-                try:
-                    recomecar_jogo()
-                except:
-                    print("O jogo não pôde ser reiniciado.")
+    esperando_reiniciar = True
+    while esperando_reiniciar:
+        relogio.tick(30)
+        tela.blit(transformartelademorte, (0, 0))
+        pygame.display.update()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                jogadorMorreu = False
+                pygame.quit()
+                exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
+                    esperando_reiniciar = False
+                    try:
+                        recomecar_jogo()
+                    except:
+                        print("O jogo não pôde ser reiniciado.")
 
-som_coleta = pygame.mixer.Sound(os.path.join(diretorio_audios, 'Cube Sfx 1.mp3'))
-musica_jogando = pygame.mixer.Sound(os.path.join(diretorio_audios, 'Jonny Fabisak-Blocky Blues.mp3'))
 def jogo():
-    global pontos_carteira, pontos_cerveja, jogadorMorreu, som_coleta
+    global pontos_carteira, pontos_cerveja, jogadorMorreu, som_coleta1, som_coleta2
     while True:
-        while jogadorMorreu:
+        if jogadorMorreu:
             gameOver(tela, transformartelademorte)
         relogio.tick(60)
         tela.fill(preto)
@@ -135,14 +141,14 @@ def jogo():
         colisao_carteira = pygame.sprite.spritecollide(
             MacLovin, grupo_carteira, False, pygame.sprite.collide_mask)
         if colisao_carteira:
-            som_coleta.play()
+            som_coleta1.play()
             carteira.colidiu = True
             pontos_carteira += 1
 
         colisao_cerveja = pygame.sprite.spritecollide(
             MacLovin, grupo_cerveja, False, pygame.sprite.collide_mask)
         if colisao_cerveja:
-            som_coleta.play()
+            som_coleta3.play()
             cerveja.colidiu = True
             pontos_cerveja += 1
 
