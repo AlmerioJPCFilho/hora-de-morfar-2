@@ -10,17 +10,17 @@ class Personagem(pygame.sprite.Sprite):
         self.imagens_personagem = []
         for i in range(4):
             img = sprite_sheet.subsurface((i * 600, 0), (600, 600))
-            img = pygame.transform.scale(img, (600 // 4 , 600 // 4))
+            img = pygame.transform.scale(img, (600 // 3, 600 // 3))
             self.imagens_personagem.append(img)
 
         self.atual = 0
         self.image = self.imagens_personagem[self.atual]
         self.rect = self.image.get_rect()
         self.mask = pygame.mask.from_surface(self.image)
-        self.rect.x = 100
-        self.rect.y = 100
+        self.rect.x = 200
+        self.rect.y = altura_tela - 100
         self.rect.center = (self.rect.x, self.rect.y)
-        self.velocidade = 5
+        self.velocidade = 7
         self.animar = False
         self.largura_tela = largura_tela
         self.altura_tela = altura_tela
@@ -64,7 +64,3 @@ class Personagem(pygame.sprite.Sprite):
                 self.atual = 0
                 self.animar = False
             self.image = self.imagens_personagem[int(self.atual)]
-            if self.fullscreen == True:
-                self.image = pygame.transform.scale(self.image, (600 // 2, 600 // 2))
-            else:
-                self.image = pygame.transform.scale(self.image, (600 // 4, 600 // 4))

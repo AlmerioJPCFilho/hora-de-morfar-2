@@ -2,6 +2,7 @@ import pygame
 from pygame.locals import *
 from sys import exit 
 from personagem import Personagem
+from coletaveis import Coletaveis
 import os
 
 #inciando o pygame
@@ -11,8 +12,8 @@ pygame.init()
 preto = (0, 0, 0)
 
 #TELA
-largura_tela = 640
-altura_tela = 480
+largura_tela = 1280
+altura_tela = 720
 tela = pygame.display.set_mode((largura_tela, altura_tela))
 pygame.display.set_caption('MacLovin')
 fullscreen = False
@@ -23,6 +24,10 @@ relogio = pygame.time.Clock()
 #DIRETORIOS
 diretorio_principal = os.path.dirname(__file__)
 diretorio_imagens = os.path.join(diretorio_principal, 'imagens')
+
+#FONTES
+fonte = pygame.font.SysFont('arial', 30, True, False)
+
 
 #SPRITES
 todas_sprites = pygame.sprite.Group()
@@ -35,6 +40,30 @@ sprite_sheet = pygame.image.load(os.path.join(diretorio_imagens, 'sprite_maclovi
 MacLovin = Personagem(sprite_sheet, largura_tela, altura_tela, fullscreen)
 todas_sprites.add(MacLovin)
 
+#COLETAVEIS 
+#Carteira
+sprite_carteira = pygame.image.load(os.path.join(diretorio_imagens, 'carteira.png')).convert()
+carteira = Coletaveis(largura_tela, altura_tela, sprite_carteira, MacLovin, fullscreen)
+todas_sprites.add(carteira)
+grupo_carteira = pygame.sprite.Group()
+grupo_carteira.add(carteira)
+
+#Cerveja
+sprite_cerveja = pygame.image.load(os.path.join(diretorio_imagens, 'cerveja.png')).convert_alpha()
+cerveja = Coletaveis(largura_tela, altura_tela, sprite_cerveja, MacLovin, fullscreen)
+todas_sprites.add(cerveja)
+grupo_cerveja = pygame.sprite.Group()
+grupo_cerveja.add(cerveja)
+
+
+#PONTUAÇÃO
+pontos_carteira = 0
+img_carteira_pt = pygame.transform.scale(sprite_carteira, (sprite_carteira.get_width() // 12, sprite_carteira.get_height() // 12))
+
+
+pontos_cerveja = 0
+img_cerveja_pt = pygame.transform.scale(sprite_cerveja, (sprite_cerveja.get_width() // 12, sprite_cerveja.get_height() // 12))
+
 
 while True:
     relogio.tick(60)
@@ -42,30 +71,16 @@ while True:
     tela.blit(background, (0,0))
     todas_sprites.draw(tela)
 
+    msg_carteira = f': {pontos_carteira}'
+    txt_carteira = fonte.render(msg_carteira, False, (255,255,255))
+
+    msg_cerveja = f': {pontos_cerveja}'
+    txt_cerveja = fonte.render(msg_cerveja, False, (255,255,255))
+
     for event in pygame.event.get():
         if event.type == QUIT:
             pygame.quit()
             exit()
-
-        if event.type == KEYDOWN:
-            if event.key == pygame.K_f:
-                MacLovin.fullscreen = True
-                MacLovin.image = pygame.transform.scale(MacLovin.image, (600 // 2, 600 // 2))
-                largura_tela = 1920
-                altura_tela = 1080
-                MacLovin.largura_tela = largura_tela
-                MacLovin.altura_tela = altura_tela - 100
-                background = pygame.transform.scale(background, (largura_tela, altura_tela))
-                tela = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
-                    
-            elif event.key == pygame.K_ESCAPE:
-                MacLovin.fullscreen = False
-                largura_tela = 640
-                altura_tela = 480
-                MacLovin.largura_tela = largura_tela
-                MacLovin.altura_tela = altura_tela
-                background = pygame.transform.scale(background, (largura_tela, altura_tela))
-                tela = pygame.display.set_mode((largura_tela, altura_tela))
 
     #movimentação do retangulo
     if pygame.key.get_pressed()[K_a]:
@@ -76,6 +91,23 @@ while True:
         MacLovin.mover_cima()
     if pygame.key.get_pressed()[K_s]:
         MacLovin.mover_baixo()
+
+    #colisão
+    colisao_carteira = pygame.sprite.spritecollide(MacLovin, grupo_carteira, False, pygame.sprite.collide_mask)
+    if colisao_carteira:
+        carteira.colidiu = True
+        pontos_carteira += 1
+
+    colisao_cerveja = pygame.sprite.spritecollide(MacLovin, grupo_cerveja, False, pygame.sprite.collide_mask)
+    if colisao_cerveja:
+        cerveja.colidiu = True
+        pontos_cerveja += 1
+
+    tela.blit(img_carteira_pt, (20, 20))
+    tela.blit(txt_carteira, (75, 18))
+
+    tela.blit(img_cerveja_pt, (20, 70))
+    tela.blit(txt_cerveja, (75, 72))
 
     todas_sprites.update()
     pygame.display.flip()
