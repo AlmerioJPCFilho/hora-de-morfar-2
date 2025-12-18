@@ -1,6 +1,6 @@
 import pygame
 from pygame.locals import *
-from random import randint, randrange
+from random import randint, randrange, choice
 
 pygame.init()
 
@@ -22,8 +22,23 @@ class Policial(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.mask = pygame.mask.from_surface(self.image)
 
-        self.rect.x = randrange(-300, 0, 50)
-        self.rect.y = randrange(0, self.altura_tela - 60, 30)
+        self.escolha = choice([0, 1, 2, 3])
+        if self.escolha == 0:
+            self.rect.x = randrange(-300, 0, 50)
+            self.rect.y = randrange(0, self.altura_tela - 60, 30)
+        
+        elif self.escolha == 1:
+            self.rect.x = randrange(0, self.largura_tela - 50, 50)
+            self.rect.y = randrange(- 150, - 50, 30)
+        
+        elif self.escolha == 2:
+            self.rect.x = randrange(self.largura_tela + 50, self.largura_tela + 200, 50)
+            self.rect.y = randrange(0, self.altura_tela - 60, 30)
+        
+        elif self.escolha == 3:
+            self.rect.x = randrange(0, self.largura_tela - 50, 50)
+            self.rect.y = randrange(self.altura_tela + 50, self.altura_tela + 150, 30)
+
         self.rect.center = (self.rect.x, self.rect.y)
 
         self.velocidade = 4
@@ -35,15 +50,32 @@ class Policial(pygame.sprite.Sprite):
         if self.atual >= len(self.imagens_personagem):
             self.atual = 0
         self.image = self.imagens_personagem[int(self.atual)]
+
+        if self.escolha == 0: #esquerda
+            if self.colidiu == True or (self.rect.right >= self.largura_tela or self.rect.bottom >= self.altura_tela):
+                self.rect.x = randrange(-300, 0, 50)
+                self.rect.y = randrange(0, self.altura_tela - 60, 30)
+            else:
+                self.rect.x += self.velocidade
         
-        if self.colidiu == True:
-            self.rect.x = randrange(-300, 0, 50)
-            self.rect.y = randrange(0, self.altura_tela - 60, 30)
-            self.colidiu = False
-        elif self.rect.right >= self.largura_tela or self.rect.bottom >= self.altura_tela:
-            self.rect.x = randrange(-300, 0, 50)
-            self.rect.y = randrange(0, self.altura_tela - 60, 30)
-            self.colidiu = False
-        else:
-            self.rect.x += self.velocidade
+        elif self.escolha == 1: #cima
+            if self.colidiu == True or (self.rect.right >= self.largura_tela or self.rect.bottom >= self.altura_tela):
+                self.rect.x = randrange(0, self.largura_tela - 50, 50)
+                self.rect.y = randrange(- 150, - 50, 30)
+            else:
+                self.rect.y += self.velocidade
+
+        elif self.escolha == 2: #direita
+            if self.colidiu == True or (self.rect.left <= 0 or self.rect.bottom >= self.altura_tela): 
+                self.rect.x = randrange(self.largura_tela + 50, self.largura_tela + 200, 50)
+                self.rect.y = randrange(0, self.altura_tela - 60, 30)
+            else:
+                self.rect.x -= self.velocidade
+            
+        elif self.escolha == 3: #baixo
+            if self.colidiu == True or (self.rect.right >= self.largura_tela or self.rect.top <= 0):
+                self.rect.x = randrange(0, self.largura_tela - 50, 50)
+                self.rect.y = randrange(self.altura_tela + 50, self.altura_tela + 150, 30)
+            else:
+                self.rect.y -= self.velocidade
 
