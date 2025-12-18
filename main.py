@@ -136,7 +136,7 @@ def timer(tempo):
     if len(lista) >= 4:
         return lista[0]+lista[1]
     elif len(lista) < 3:
-        return "0."+lista[0]
+        return 1
     return lista[0]
 
 def iniciar_jogo():
@@ -210,7 +210,7 @@ def gameOver(tela, transformartelademorte):
 
 def jogo():
     global pontos_carteira, pontos_cerveja, pontos_detergente, pontos_policial, jogadorMorreu, som_coleta1, som_coleta2, som_coleta3, musica_jogo_rodando, musica_titulo, musica_titulo_rodando
-    tempo_restante -= 1100
+    tempo_restante = 1100
     while True:
         if jogadorMorreu:
             gameOver(tela, transformartelademorte)
