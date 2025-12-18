@@ -374,7 +374,7 @@ def jogo():
         tela.blit(txt_policial, (largura_tela - 45, 20))
 
         todas_sprites.update()
-        if pontos_cerveja >= 10:
+        if pontos_cerveja >= 7:
             jogador_venceu = True
         if tempo_restante <= 0:
             jogador_morreu = True
