@@ -8,8 +8,8 @@
 ## Arquitetura:
 O código gira em torno de uma função principal que recebe os inputs, gerencia as atualizações da tela, as colisões com os objetos e o status de vitória ou derrota; uma função de game over e algumas funções para aleatorizar o spawn dos objetos, configurar o personagem, suas animações e movimentação.
 ## Capturas de tela:
-![Tela inicial](hora-de-morfar-2/imagens/print-tela-inicial.png)
-![Tela final](hora-de-morfar-2/imagens/print-tela-final.png)
+![Tela inicial](imagens/print-tela-inicial.png)
+![Tela final](imagens/print-tela-final.png)
 ## Ferramentas utilizadas:
 O projeto conta com ferramentas como a biblioteca pygame, culturalmente utilizada nesse primeiro projeto da disciplina e que permite a criação de jogos 2D em python; GitHub como sistema de versionamento do código, o Visual Studio Code como IDE, o chat GPT para criação de sprites e imagens e softwares de edição de imagem e áudio.
 ## Divisão de trabalho:
