@@ -23,11 +23,13 @@ class Personagem(pygame.sprite.Sprite):
         self.animar = False
         self.largura_tela = largura_tela
         self.altura_tela = altura_tela
+        self.flipar = False
 
     def animacao(self):
         self.animar = True
 
     def mover_esquerda(self):
+        self.flipar = True
         if self.rect.x <= 0:
             self.rect.x = 0
         else:
@@ -35,6 +37,7 @@ class Personagem(pygame.sprite.Sprite):
             self.animacao()
 
     def mover_direita(self):
+        self.flipar = False
         if self.rect.topright[0] >= self.largura_tela:
             self.rect.right = self.largura_tela
         else:
@@ -42,6 +45,7 @@ class Personagem(pygame.sprite.Sprite):
             self.animacao()
     
     def mover_cima(self):
+        self.flipar = False
         if self.rect.y <= 0:
             self.rect.y = 0
         else:
@@ -49,6 +53,7 @@ class Personagem(pygame.sprite.Sprite):
             self.animacao()
     
     def mover_baixo(self):
+        self.flipar = False
         if self.rect.bottom >= self.altura_tela:
             self.rect.bottom = self.altura_tela
         else:
@@ -62,3 +67,5 @@ class Personagem(pygame.sprite.Sprite):
                 self.atual = 0
                 self.animar = False
             self.image = self.imagens_personagem[int(self.atual)]
+            if self.flipar == True:
+                self.image = pygame.transform.flip(self.image, True, False)
