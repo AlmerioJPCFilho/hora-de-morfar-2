@@ -130,14 +130,19 @@ transformarTelaInicial = pygame.transform.scale(telainicial, (1280, 720))
 
 # TEMPORIZADOR
 fonte = pygame.font.SysFont(None, 50)
+bonus = [0, 0]
 #FUNÇÂO TEMPO
 def timer(tempo):
     lista = str(tempo)
     if len(lista) >= 4:
         return lista[0]+lista[1]
-    elif len(lista) < 3:
-        return 1
-    return lista[0]
+    elif len(lista) == 3:
+        return lista[0]
+    elif len(lista)  == 2:
+        return "0."+lista[0]
+    else:
+        return 0
+
 
 def iniciar_jogo():
     global musica_titulo_rodando
@@ -262,12 +267,20 @@ def jogo():
             som_coleta3.play()
             carteira.colidiu = True
             pontos_carteira += 1
+            bonus[0] += 1
+            if bonus[0] == 5:
+                tempo_restante += 500
+                bonus[0] = 0
 
         colisao_cerveja = pygame.sprite.spritecollide(McLovin, grupo_cerveja, False, pygame.sprite.collide_mask)
         if colisao_cerveja:
             som_coleta1.play()
             cerveja.colidiu = True
             pontos_cerveja += 1
+            bonus[1] += 1
+            if bonus[1] == 10:
+                tempo_restante += 500
+                bonus[1] = 0
 
         colisao_detergente = pygame.sprite.spritecollide(McLovin, grupo_detergente, False, pygame.sprite.collide_mask)
         if colisao_detergente:
@@ -280,24 +293,28 @@ def jogo():
             som_dano.play()
             policial_1.colidiu = True
             pontos_policial += 1
+            tempo_restante -= 100
             
         colisao_policial_2 = pygame.sprite.spritecollide(McLovin, grupo_policial_2, False, pygame.sprite.collide_mask)
         if colisao_policial_2:
             som_dano.play()
             policial_2.colidiu = True
             pontos_policial += 1
+            tempo_restante -= 100
 
         colisao_policial_3 = pygame.sprite.spritecollide(McLovin, grupo_policial_3, False, pygame.sprite.collide_mask)
         if colisao_policial_3:
             som_dano.play()
             policial_3.colidiu = True
             pontos_policial += 1
+            tempo_restante -= 100
 
         colisao_policial_4 = pygame.sprite.spritecollide(McLovin, grupo_policial_4, False, pygame.sprite.collide_mask)
         if colisao_policial_4:
             som_dano.play()
             policial_4.colidiu = True
             pontos_policial += 1
+            tempo_restante -= 100
 
 
         tela.blit(img_carteira_pt, (20, 20))
