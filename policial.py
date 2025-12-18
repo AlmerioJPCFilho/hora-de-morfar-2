@@ -32,6 +32,7 @@ class Policial(pygame.sprite.Sprite):
             self.rect.y = randrange(- 150, - 50, 30)
         
         elif self.escolha == 2:
+            self.image = pygame.transform.flip(self.image, False, False)
             self.rect.x = randrange(self.largura_tela + 50, self.largura_tela + 200, 50)
             self.rect.y = randrange(0, self.altura_tela - 60, 30)
         
@@ -55,7 +56,6 @@ class Policial(pygame.sprite.Sprite):
             if self.colidiu == True or (self.rect.right >= self.largura_tela or self.rect.bottom >= self.altura_tela):
                 self.rect.x = randint(-300, 0)
                 self.rect.y = randint(0, self.altura_tela - 60)
-                self.escolha = choice([0, 1, 2, 3])
                 self.colidiu = False
             else:
                 self.rect.x += self.velocidade
@@ -64,16 +64,15 @@ class Policial(pygame.sprite.Sprite):
             if self.colidiu == True or (self.rect.right >= self.largura_tela or self.rect.bottom >= self.altura_tela):
                 self.rect.x = randint(0, self.largura_tela - 50)
                 self.rect.y = randint(-150, -50)
-                self.escolha = choice([0, 1, 2, 3])
                 self.colidiu = False
             else:
                 self.rect.y += self.velocidade
 
         elif self.escolha == 2: #direita
             if self.colidiu == True or (self.rect.left <= 0 or self.rect.bottom >= self.altura_tela):
+                self.image = pygame.transform.flip(self.image, True, False)
                 self.rect.x = randint(self.largura_tela + 50, self.largura_tela + 150)
                 self.rect.y = randint(0, self.altura_tela - 60)
-                self.escolha = choice([0, 1, 2, 3])
                 self.colidiu = False
             else:
                 self.rect.x -= self.velocidade
@@ -82,7 +81,6 @@ class Policial(pygame.sprite.Sprite):
             if self.colidiu == True or (self.rect.left <= 0 or self.rect.bottom >= self.altura_tela):
                 self.rect.x = randint(0, self.largura_tela - 50)
                 self.rect.y = randint(self.altura_tela + 50, self.altura_tela + 150)
-                self.escolha = choice([0, 1, 2, 3])
                 self.colidiu = False
             else:
                 self.rect.y -= self.velocidade
