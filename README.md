@@ -12,8 +12,10 @@ Tela inicial:
 ![Tela inicial](imagens/print-tela-inicial.png)
 Tela de jogo:
 ![Tela de jogo](imagens/print-tela-jogo.png)
+Tela de vitória:
+![Tela de vitória](imagens/print-tela-vitoria.png)
 Tela de derrota:
-![Tela de derrota](imagens/print-tela-final.png)
+![Tela de derrota](imagens/print-tela-derrota.png)
 ## Ferramentas utilizadas:
 O projeto conta com ferramentas como a biblioteca pygame, culturalmente utilizada nesse primeiro projeto da disciplina e que permite a criação de jogos 2D em python; GitHub como sistema de versionamento do código, o Visual Studio Code como IDE, o chat GPT para criação de sprites e imagens e softwares de edição de imagem e áudio.
 ## Divisão de trabalho:
