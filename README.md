@@ -10,13 +10,15 @@ O código gira em torno de uma função principal que recebe os inputs, gerencia
 ## Capturas de tela:
 Tela inicial:
 ![Tela inicial](imagens/print-tela-inicial.png)
+Tela de jogo:
+![Tela de jogo](imagens/print-tela-jogo.png)
 Tela de derrota:
 ![Tela de derrota](imagens/print-tela-final.png)
 ## Ferramentas utilizadas:
 O projeto conta com ferramentas como a biblioteca pygame, culturalmente utilizada nesse primeiro projeto da disciplina e que permite a criação de jogos 2D em python; GitHub como sistema de versionamento do código, o Visual Studio Code como IDE, o chat GPT para criação de sprites e imagens e softwares de edição de imagem e áudio.
 ## Divisão de trabalho:
 - Almério: Implementação de sfx, revisão de código, organização e monitoramento do repositório, e suporte no código.
-- Arthur: Suporte no código principal.
+- Arthur: Funções de tempo e suporte no código principal.
 - Eduardo: Programação das Telas de início,fim e suporte no código principal.
 - Jhoranes: Sprites, imagens e suporte no código.
 - João: Personagem principal e sua movimentação, estrutura dos coletáveis, modularização inicial e suporte no código.
