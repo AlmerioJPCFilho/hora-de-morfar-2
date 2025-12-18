@@ -33,45 +33,38 @@ fonte = pygame.font.SysFont('arial', 30, True, False)
 # SPRITES
 todas_sprites = pygame.sprite.Group()
 sprites_coletaveis = pygame.sprite.Group()
-background = pygame.image.load(os.path.join(
-    diretorio_imagens, 'imagem-fundo.png')).convert()
+background = pygame.image.load(os.path.join(diretorio_imagens, 'imagem-fundo.png')).convert()
 background = pygame.transform.scale(background, (largura_tela, altura_tela))
 
 # SONS
 musica_titulo = pygame.mixer.Sound(os.path.join(diretorio_audios, 'jonny-fabisak-title-cube.mp3'))
+musica_titulo.set_volume(0.5)
+musica_titulo_rodando = False
 musica_jogo = pygame.mixer.Sound(os.path.join(diretorio_audios, 'jonny-fabisak-blocky-blues.mp3'))
 musica_jogo.set_volume(0.5)
 musica_jogo_rodando = False
-som_coleta1 = pygame.mixer.Sound(
-    os.path.join(diretorio_audios, 'cube-sfx-1.mp3'))
-som_coleta2 = pygame.mixer.Sound(
-    os.path.join(diretorio_audios, 'cube-sfx-2.mp3'))
-som_coleta3 = pygame.mixer.Sound(
-    os.path.join(diretorio_audios, 'cube-sfx-3.mp3'))
+som_coleta1 = pygame.mixer.Sound(os.path.join(diretorio_audios, 'cube-sfx-1.mp3'))
+som_coleta2 = pygame.mixer.Sound(os.path.join(diretorio_audios, 'cube-sfx-2.mp3'))
+som_coleta3 = pygame.mixer.Sound(os.path.join(diretorio_audios, 'cube-sfx-3.mp3'))
 som_morte = pygame.mixer.Sound(os.path.join(diretorio_audios, 'som-morte.mp3'))
 som_morte.set_volume(0.5)
 
 # PERSONAGEM
-sprite_sheet = pygame.image.load(os.path.join(
-    diretorio_imagens, 'sprite-mclovin.png')).convert_alpha()
+sprite_sheet = pygame.image.load(os.path.join(diretorio_imagens, 'sprite-mclovin.png')).convert_alpha()
 McLovin = Personagem(sprite_sheet, largura_tela, altura_tela, fullscreen)
 todas_sprites.add(McLovin)
 
 # COLETAVEIS
 # Carteira
-sprite_carteira = pygame.image.load(os.path.join(
-    diretorio_imagens, 'identidade.png')).convert()
-carteira = Coletaveis(largura_tela, altura_tela,
-                      sprite_carteira, McLovin, fullscreen)
+sprite_carteira = pygame.image.load(os.path.join(diretorio_imagens, 'identidade.png')).convert()
+carteira = Coletaveis(largura_tela, altura_tela,sprite_carteira, McLovin, fullscreen)
 todas_sprites.add(carteira)
 grupo_carteira = pygame.sprite.Group()
 grupo_carteira.add(carteira)
 
 # Cerveja
-sprite_cerveja = pygame.image.load(os.path.join(
-    diretorio_imagens, 'cerveja.png')).convert_alpha()
-cerveja = Coletaveis(largura_tela, altura_tela,
-                     sprite_cerveja, McLovin, fullscreen)
+sprite_cerveja = pygame.image.load(os.path.join(diretorio_imagens, 'cerveja.png')).convert_alpha()
+cerveja = Coletaveis(largura_tela, altura_tela,sprite_cerveja, McLovin, fullscreen)
 todas_sprites.add(cerveja)
 grupo_cerveja = pygame.sprite.Group()
 grupo_cerveja.add(cerveja)
@@ -108,23 +101,22 @@ telainicial = pygame.image.load(os.path.join(diretorio_imagens, 'tela-inicial.pn
 transformarTelaInicial = pygame.transform.scale(telainicial, (1280, 720))
 
 def iniciar_jogo():
+    global musica_titulo_rodando
     retanguloTransparente = pygame.Surface((320, 60))
     retanguloTransparente.set_alpha(100)
     retanguloTransparente.fill((255, 255, 255)) 
     rect_jogar = pygame.Rect(480, 420, 320, 60)
     rect_sair = pygame.Rect(480, 510, 320, 60)
-
     while True:
+        if not musica_titulo_rodando:
+            musica_titulo.play(-1)
+            musica_titulo_rodando = True
         tela.blit(transformarTelaInicial, (0, 0))
-        
         mouse = pygame.mouse.get_pos()
-        
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
-            
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1: 
                     if rect_jogar.collidepoint(mouse):
@@ -159,8 +151,11 @@ def gameOver(tela, transformartelademorte):
         tela.blit(txt_sair, ((10,45)))
         pygame.display.update()
         for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                exit()
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
+                if event.key ==pygame.K_ESCAPE:
                     jogadorMorreu = False
                     pygame.quit()
                     exit()
@@ -174,11 +169,14 @@ def gameOver(tela, transformartelademorte):
                         print("O jogo não pôde ser reiniciado.")
 
 def jogo():
-    global pontos_carteira, pontos_cerveja, pontos_detergente, jogadorMorreu, som_coleta1, som_coleta2, som_coleta3, musica_jogo_rodando
+    global pontos_carteira, pontos_cerveja, pontos_detergente, jogadorMorreu, som_coleta1, som_coleta2, som_coleta3, musica_jogo_rodando, musica_titulo, musica_titulo_rodando
     while True:
         if jogadorMorreu:
             gameOver(tela, transformartelademorte)
         if not musica_jogo_rodando:
+            if musica_titulo_rodando:
+                musica_titulo.stop()
+                musica_titulo_rodando = False
             musica_jogo.play(-1)
             musica_jogo_rodando = True
         relogio.tick(60)
