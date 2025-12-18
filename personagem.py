@@ -45,7 +45,6 @@ class Personagem(pygame.sprite.Sprite):
             self.animacao()
     
     def mover_cima(self):
-        self.flipar = False
         if self.rect.y <= 0:
             self.rect.y = 0
         else:
@@ -53,7 +52,6 @@ class Personagem(pygame.sprite.Sprite):
             self.animacao()
     
     def mover_baixo(self):
-        self.flipar = False
         if self.rect.bottom >= self.altura_tela:
             self.rect.bottom = self.altura_tela
         else:
