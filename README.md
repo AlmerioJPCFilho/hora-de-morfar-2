@@ -17,7 +17,7 @@ O projeto conta com ferramentas como a biblioteca pygame, culturalmente utilizad
 ## Divisão de trabalho:
 - Almério: Implementação de sfx, revisão de código, organização e monitoramento do repositório, e suporte no código.
 - Arthur: Suporte no código principal.
-- Eduardo: Telas de início, fim e suporte no código.
+- Eduardo: Programação das Telas de início,fim e suporte no código principal.
 - Jhoranes: Sprites, imagens e suporte no código.
 - João: Personagem principal e sua movimentação, estrutura dos coletáveis, modularização inicial e suporte no código.
 ## Conceitos implementados:
