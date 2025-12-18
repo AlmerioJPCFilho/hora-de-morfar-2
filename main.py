@@ -97,24 +97,32 @@ telademorte = pygame.image.load(os.path.join(diretorio_imagens, 'tela-derrota.pn
 transformartelademorte = pygame.transform.scale(telademorte, (1280, 720))
 jogadorMorreu = False
 
+# TEXTOS
+msg_reiniciar = 'Pressione (ESPAÇO) para reiniciar'
+txt_reiniciar = fonte.render(msg_reiniciar, False, (130, 0, 0))
+msg_sair = 'Pressione (ESC) para sair'
+txt_sair = fonte.render(msg_sair, False, (130, 0, 0))
+
 def gameOver(tela, transformartelademorte):
     global jogadorMorreu, musica_jogo_rodando
     musica_jogo.stop()
     musica_jogo_rodando = False
     som_morte.play()
     esperando_reiniciar = True
-    
     while esperando_reiniciar:
         relogio.tick(30)
         tela.blit(transformartelademorte, (0, 0))
+        tela.blit(txt_reiniciar, ((10,5)))
+        tela.blit(txt_sair, ((10,45)))
         pygame.display.update()
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                jogadorMorreu = False
-                pygame.quit()
-                exit()
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
+                if event.key == pygame.K_ESCAPE:
+                    jogadorMorreu = False
+                    pygame.quit()
+                    exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
                     esperando_reiniciar = False
                     try:
                         som_morte.stop()
@@ -188,7 +196,7 @@ def jogo():
         tela.blit(txt_detergente, (75, 145))
 
         todas_sprites.update()
-        if pontos_detergente == 5:
+        if pontos_detergente == 1:
             jogadorMorreu = True
         pygame.display.flip()
 
