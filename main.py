@@ -128,6 +128,22 @@ txt_sair = fonte.render(msg_sair, False, (130, 0, 0))
 telainicial = pygame.image.load(os.path.join(diretorio_imagens, 'tela-inicial.png')).convert()
 transformarTelaInicial = pygame.transform.scale(telainicial, (1280, 720))
 
+# TEMPORIZADOR
+fonte = pygame.font.SysFont(None, 50)
+bonus = [0, 0]
+#FUNÇÂO TEMPO
+def timer(tempo):
+    lista = str(tempo)
+    if len(lista) >= 4:
+        return lista[0]+lista[1]
+    elif len(lista) == 3:
+        return lista[0]
+    elif len(lista)  == 2:
+        return "0."+lista[0]
+    else:
+        return 0
+
+
 def iniciar_jogo():
     global musica_titulo_rodando
     retanguloTransparente = pygame.Surface((320, 60))
@@ -199,6 +215,7 @@ def gameOver(tela, transformartelademorte):
 
 def jogo():
     global pontos_carteira, pontos_cerveja, pontos_detergente, pontos_policial, jogadorMorreu, som_coleta1, som_coleta2, som_coleta3, musica_jogo_rodando, musica_titulo, musica_titulo_rodando
+    tempo_restante = 1100
     while True:
         if jogadorMorreu:
             gameOver(tela, transformartelademorte)
@@ -212,6 +229,10 @@ def jogo():
         tela.fill(preto)
         tela.blit(background, (0, 0))
         todas_sprites.draw(tela)
+        tempo_restante -= 1.5
+        tempo_print = timer(int(tempo_restante))
+        mensagem = fonte.render(f"Tempo Restante: {tempo_print}", False, (255, 255, 255))
+        tela.blit(mensagem, (500, 20))
 
         msg_carteira = f': {pontos_carteira}'
         txt_carteira = fonte.render(msg_carteira, False, (255, 255, 255))
@@ -246,12 +267,20 @@ def jogo():
             som_coleta3.play()
             carteira.colidiu = True
             pontos_carteira += 1
+            bonus[0] += 1
+            if bonus[0] == 5:
+                tempo_restante += 500
+                bonus[0] = 0
 
         colisao_cerveja = pygame.sprite.spritecollide(McLovin, grupo_cerveja, False, pygame.sprite.collide_mask)
         if colisao_cerveja:
             som_coleta1.play()
             cerveja.colidiu = True
             pontos_cerveja += 1
+            bonus[1] += 1
+            if bonus[1] == 10:
+                tempo_restante += 500
+                bonus[1] = 0
 
         colisao_detergente = pygame.sprite.spritecollide(McLovin, grupo_detergente, False, pygame.sprite.collide_mask)
         if colisao_detergente:
@@ -264,24 +293,28 @@ def jogo():
             som_dano.play()
             policial_1.colidiu = True
             pontos_policial += 1
+            tempo_restante -= 100
             
         colisao_policial_2 = pygame.sprite.spritecollide(McLovin, grupo_policial_2, False, pygame.sprite.collide_mask)
         if colisao_policial_2:
             som_dano.play()
             policial_2.colidiu = True
             pontos_policial += 1
+            tempo_restante -= 100
 
         colisao_policial_3 = pygame.sprite.spritecollide(McLovin, grupo_policial_3, False, pygame.sprite.collide_mask)
         if colisao_policial_3:
             som_dano.play()
             policial_3.colidiu = True
             pontos_policial += 1
+            tempo_restante -= 100
 
         colisao_policial_4 = pygame.sprite.spritecollide(McLovin, grupo_policial_4, False, pygame.sprite.collide_mask)
         if colisao_policial_4:
             som_dano.play()
             policial_4.colidiu = True
             pontos_policial += 1
+            tempo_restante -= 100
 
 
         tela.blit(img_carteira_pt, (20, 20))
@@ -297,7 +330,7 @@ def jogo():
         tela.blit(txt_policial, (largura_tela - 45, 20))
 
         todas_sprites.update()
-        if pontos_detergente > 10:
+        if tempo_restante <= 0:
             jogadorMorreu = True
         pygame.display.flip()
 
