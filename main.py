@@ -3,6 +3,7 @@ from pygame.locals import *
 from sys import exit
 from personagem import Personagem
 from coletaveis import Coletaveis
+from policial import Policial
 import os
 
 # inciando o pygame
@@ -16,7 +17,6 @@ largura_tela = 1280
 altura_tela = 720
 tela = pygame.display.set_mode((largura_tela, altura_tela))
 pygame.display.set_caption('The adventures of McLovin')
-fullscreen = False
 
 # RELOGIO
 relogio = pygame.time.Clock()
@@ -46,35 +46,59 @@ musica_jogo_rodando = False
 som_coleta1 = pygame.mixer.Sound(os.path.join(diretorio_audios, 'cube-sfx-1.mp3'))
 som_coleta2 = pygame.mixer.Sound(os.path.join(diretorio_audios, 'cube-sfx-2.mp3'))
 som_coleta3 = pygame.mixer.Sound(os.path.join(diretorio_audios, 'cube-sfx-3.mp3'))
+som_dano = pygame.mixer.Sound(os.path.join(diretorio_audios, 'som-dano.wav.'))
 som_morte = pygame.mixer.Sound(os.path.join(diretorio_audios, 'som-morte.mp3'))
 som_morte.set_volume(0.5)
 
 # PERSONAGEM
-sprite_sheet = pygame.image.load(os.path.join(diretorio_imagens, 'sprite-mclovin.png')).convert_alpha()
-McLovin = Personagem(sprite_sheet, largura_tela, altura_tela, fullscreen)
+sprite_personagem = pygame.image.load(os.path.join(diretorio_imagens, 'sprite-mclovin.png')).convert_alpha()
+McLovin = Personagem(sprite_personagem, largura_tela, altura_tela)
 todas_sprites.add(McLovin)
 
 # COLETAVEIS
 # Carteira
 sprite_carteira = pygame.image.load(os.path.join(diretorio_imagens, 'identidade.png')).convert()
-carteira = Coletaveis(largura_tela, altura_tela,sprite_carteira, McLovin, fullscreen)
+carteira = Coletaveis(largura_tela, altura_tela,sprite_carteira, McLovin)
 todas_sprites.add(carteira)
 grupo_carteira = pygame.sprite.Group()
 grupo_carteira.add(carteira)
 
 # Cerveja
 sprite_cerveja = pygame.image.load(os.path.join(diretorio_imagens, 'cerveja.png')).convert_alpha()
-cerveja = Coletaveis(largura_tela, altura_tela,sprite_cerveja, McLovin, fullscreen)
+cerveja = Coletaveis(largura_tela, altura_tela,sprite_cerveja, McLovin)
 todas_sprites.add(cerveja)
 grupo_cerveja = pygame.sprite.Group()
 grupo_cerveja.add(cerveja)
 
 # Detergente
 sprite_detergente = pygame.image.load(os.path.join(diretorio_imagens, 'detergente.png')).convert_alpha()
-detergente = Coletaveis(largura_tela, altura_tela, sprite_detergente, McLovin, fullscreen)
+detergente = Coletaveis(largura_tela, altura_tela, sprite_detergente, McLovin)
 todas_sprites.add(detergente)
 grupo_detergente = pygame.sprite.Group()
 grupo_detergente.add(detergente)
+
+#Policial
+sprite_policial = pygame.image.load(os.path.join(diretorio_imagens, 'policial.png')).convert_alpha()
+
+grupo_policial_1 = pygame.sprite.Group()
+policial_1 = Policial(sprite_policial, largura_tela, altura_tela)
+todas_sprites.add(policial_1)
+grupo_policial_1.add(policial_1)
+
+grupo_policial_2 = pygame.sprite.Group()
+policial_2 = Policial(sprite_policial, largura_tela, altura_tela)
+todas_sprites.add(policial_2)
+grupo_policial_2.add(policial_2)
+
+grupo_policial_3 = pygame.sprite.Group()
+policial_3 = Policial(sprite_policial, largura_tela, altura_tela)
+todas_sprites.add(policial_3)
+grupo_policial_3.add(policial_3)
+
+grupo_policial_4 = pygame.sprite.Group()
+policial_4 = Policial(sprite_policial, largura_tela, altura_tela)
+todas_sprites.add(policial_4)
+grupo_policial_4.add(policial_4)
 
 # PONTUAÇÃO
 pontos_carteira = 0
@@ -85,6 +109,10 @@ img_cerveja_pt = pygame.transform.scale(sprite_cerveja, (sprite_cerveja.get_widt
 
 pontos_detergente = 0
 img_detergente_pt = pygame.transform.scale(sprite_detergente, (sprite_detergente.get_width() // 12, sprite_detergente.get_height() // 12))
+
+pontos_policial = 0
+sprite_policial_pt = pygame.image.load(os.path.join(diretorio_imagens, 'policial-pt.png')).convert_alpha()
+img_policial_pt = pygame.transform.scale(sprite_policial_pt, (sprite_policial_pt.get_width() // 12, sprite_policial_pt.get_height() // 12))
 
 jogadorMorreu = False
 telademorte = pygame.image.load(os.path.join(diretorio_imagens, 'tela-derrota.png')).convert()
@@ -131,10 +159,11 @@ def iniciar_jogo():
         pygame.display.update()
 
 def recomecar_jogo():
-    global pontos_carteira, pontos_cerveja, pontos_detergente, jogadorMorreu, self
+    global pontos_carteira, pontos_cerveja, pontos_detergente, pontos_policial, jogadorMorreu, self
     pontos_carteira = 0
     pontos_cerveja = 0
     pontos_detergente = 0
+    pontos_policial = 0
     jogadorMorreu = False
     McLovin.rect.center = (200, altura_tela - 100)
 
@@ -169,7 +198,7 @@ def gameOver(tela, transformartelademorte):
                         print("O jogo não pôde ser reiniciado.")
 
 def jogo():
-    global pontos_carteira, pontos_cerveja, pontos_detergente, jogadorMorreu, som_coleta1, som_coleta2, som_coleta3, musica_jogo_rodando, musica_titulo, musica_titulo_rodando
+    global pontos_carteira, pontos_cerveja, pontos_detergente, pontos_policial, jogadorMorreu, som_coleta1, som_coleta2, som_coleta3, musica_jogo_rodando, musica_titulo, musica_titulo_rodando
     while True:
         if jogadorMorreu:
             gameOver(tela, transformartelademorte)
@@ -192,6 +221,9 @@ def jogo():
 
         msg_detergente = f': {pontos_detergente}'
         txt_detergente = fonte.render(msg_detergente, False, (255, 255, 255))
+
+        msg_policial = f': {pontos_policial}'
+        txt_policial = fonte.render(msg_policial, False, (255, 255, 255))
 
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -226,6 +258,31 @@ def jogo():
             som_coleta2.play()
             detergente.colidiu = True
             pontos_detergente += 1
+        
+        colisao_policial_1 = pygame.sprite.spritecollide(McLovin, grupo_policial_1, False, pygame.sprite.collide_mask)
+        if colisao_policial_1:
+            som_dano.play()
+            policial_1.colidiu = True
+            pontos_policial += 1
+            
+        colisao_policial_2 = pygame.sprite.spritecollide(McLovin, grupo_policial_2, False, pygame.sprite.collide_mask)
+        if colisao_policial_2:
+            som_dano.play()
+            policial_2.colidiu = True
+            pontos_policial += 1
+
+        colisao_policial_3 = pygame.sprite.spritecollide(McLovin, grupo_policial_3, False, pygame.sprite.collide_mask)
+        if colisao_policial_3:
+            som_dano.play()
+            policial_3.colidiu = True
+            pontos_policial += 1
+
+        colisao_policial_4 = pygame.sprite.spritecollide(McLovin, grupo_policial_4, False, pygame.sprite.collide_mask)
+        if colisao_policial_4:
+            som_dano.play()
+            policial_4.colidiu = True
+            pontos_policial += 1
+
 
         tela.blit(img_carteira_pt, (20, 20))
         tela.blit(txt_carteira, (75, 18))
@@ -236,8 +293,11 @@ def jogo():
         tela.blit(img_detergente_pt, (20, 140))
         tela.blit(txt_detergente, (75, 145))
 
+        tela.blit(img_policial_pt, (largura_tela - 100 , 20))
+        tela.blit(txt_policial, (largura_tela - 45, 20))
+
         todas_sprites.update()
-        if pontos_detergente == 1:
+        if pontos_detergente > 10:
             jogadorMorreu = True
         pygame.display.flip()
 
