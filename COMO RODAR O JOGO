@@ -1,0 +1,5 @@
+Como rodar "The adventures of McLovin" no seu computador:
+1- Instale o arquivo .zip no repositório do github;
+2- Abra a pasta do repositório no Visual Studio Code;
+3- Encontre o arquivo (main.py);
+4- Clique em "Run Python File" no canto superior direito da tela.
