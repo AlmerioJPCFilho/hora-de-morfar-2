@@ -10,7 +10,7 @@ class Personagem(pygame.sprite.Sprite):
         self.imagens_personagem = []
         for i in range(4):
             img = sprite_sheet.subsurface((i * 600, 0), (600, 600))
-            img = pygame.transform.scale(img, (600 // 3, 600 // 3))
+            img = pygame.transform.scale(img, (600 // 4, 600 // 4))
             self.imagens_personagem.append(img)
 
         self.atual = 0
