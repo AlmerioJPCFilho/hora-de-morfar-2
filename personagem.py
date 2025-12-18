@@ -1,11 +1,10 @@
 import pygame
 from pygame.locals import *
-import os
 
 pygame.init()
 
 class Personagem(pygame.sprite.Sprite):
-    def __init__(self, sprite_sheet, largura_tela, altura_tela, fullscreen):
+    def __init__(self, sprite_sheet, largura_tela, altura_tela):
         pygame.sprite.Sprite.__init__(self)
         self.imagens_personagem = []
         for i in range(4):
@@ -17,14 +16,13 @@ class Personagem(pygame.sprite.Sprite):
         self.image = self.imagens_personagem[self.atual]
         self.rect = self.image.get_rect()
         self.mask = pygame.mask.from_surface(self.image)
-        self.rect.x = 200
+        self.rect.x = largura_tela // 2
         self.rect.y = altura_tela - 100
         self.rect.center = (self.rect.x, self.rect.y)
         self.velocidade = 7
         self.animar = False
         self.largura_tela = largura_tela
         self.altura_tela = altura_tela
-        self.fullscreen = fullscreen
 
     def animacao(self):
         self.animar = True

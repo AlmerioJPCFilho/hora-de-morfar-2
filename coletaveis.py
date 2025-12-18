@@ -4,7 +4,7 @@ import os
 from random import randint
 
 class Coletaveis(pygame.sprite.Sprite):
-    def __init__(self, largura_tela, altura_tela, imagem, personagem, fullscreen):
+    def __init__(self, largura_tela, altura_tela, imagem, personagem):
         pygame.sprite.Sprite.__init__(self)
         self.image = imagem
         self.largura_imagem = self.image.get_width()
@@ -21,7 +21,6 @@ class Coletaveis(pygame.sprite.Sprite):
             self.rect.y = randint(50, self.altura_tela - 50)
         self.personagem = personagem
         self.colidiu = False
-        self.fullscreen = fullscreen
 
     def update(self):
         if self.colidiu == True:
