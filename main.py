@@ -47,6 +47,7 @@ som_coleta1 = pygame.mixer.Sound(os.path.join(diretorio_audios, 'cube-sfx-1.mp3'
 som_coleta2 = pygame.mixer.Sound(os.path.join(diretorio_audios, 'cube-sfx-2.mp3'))
 som_coleta3 = pygame.mixer.Sound(os.path.join(diretorio_audios, 'cube-sfx-3.mp3'))
 som_dano = pygame.mixer.Sound(os.path.join(diretorio_audios, 'som-dano.wav.'))
+som_vitoria = pygame.mixer.Sound(os.path.join(diretorio_audios, 'jonny-fabisak-cube-end.mp3'))
 som_morte = pygame.mixer.Sound(os.path.join(diretorio_audios, 'som-morte.mp3'))
 som_morte.set_volume(0.5)
 
@@ -119,8 +120,8 @@ tela_morte = pygame.image.load(os.path.join(diretorio_imagens, 'tela-derrota.png
 transformar_tela_morte = pygame.transform.scale(tela_morte, (1280, 720))
 
 jogador_venceu = False
-#tela_vitoria = pygame.image.load(os.path.join(diretorio_imagens, 'tela-vitoria.png')).convert()
-#transformar_tela_vitoria = pygame.transform.scale(tela_vitoria, (1280, 720))
+tela_vitoria = pygame.image.load(os.path.join(diretorio_imagens, 'tela-vitoria.png')).convert()
+transformar_tela_vitoria = pygame.transform.scale(tela_vitoria, (1280, 720))
 
 # TEXTOS
 msg_reiniciar = 'Pressione (ESPAÇO) para reiniciar'
@@ -193,6 +194,7 @@ def vitoria(tela, transformar_tela_vitoria):
     global jogador_venceu, musica_jogo_rodando
     musica_jogo.stop()
     musica_jogo_rodando = False
+    som_vitoria.play()
     esperando_reiniciar = True
     while esperando_reiniciar:
         relogio.tick(30)
@@ -213,7 +215,7 @@ def vitoria(tela, transformar_tela_vitoria):
                 if event.key == pygame.K_SPACE:
                     esperando_reiniciar = False
                     try:
-                        #som_vitoria.stop()
+                        som_vitoria.stop()
                         recomecar_jogo()
                     except:
                         print("O jogo não pôde ser reiniciado.")
@@ -253,8 +255,8 @@ def jogo():
     while True:
         if jogador_morreu:
             gameOver(tela, transformar_tela_morte)
-        #if jogador_venceu:
-            #vitoria(tela, transformar_tela_vitoria)
+        if jogador_venceu:
+            vitoria(tela, transformar_tela_vitoria)
         if not musica_jogo_rodando:
             if musica_titulo_rodando:
                 musica_titulo.stop()
@@ -364,7 +366,7 @@ def jogo():
         tela.blit(txt_policial, (largura_tela - 45, 20))
 
         todas_sprites.update()
-        if pontos_cerveja >= 25:
+        if pontos_cerveja >= 1:
             jogador_venceu = True
         if tempo_restante <= 0:
             jogador_morreu = True
