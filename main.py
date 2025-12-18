@@ -330,6 +330,8 @@ def jogo():
             policial_1.colidiu = True
             pontos_policial += 1
             tempo_restante -= 100
+            msg_tempo = fonte.render("-1 segundo!", False, (255, 255, 0))
+            tela.blit(msg_tempo, (500, 70))
             
         colisao_policial_2 = pygame.sprite.spritecollide(McLovin, grupo_policial_2, False, pygame.sprite.collide_mask)
         if colisao_policial_2:
@@ -337,6 +339,8 @@ def jogo():
             policial_2.colidiu = True
             pontos_policial += 1
             tempo_restante -= 100
+            msg_tempo = fonte.render("-1 segundo!", False, (255, 255, 0))
+            tela.blit(msg_tempo, (500, 70))
 
         colisao_policial_3 = pygame.sprite.spritecollide(McLovin, grupo_policial_3, False, pygame.sprite.collide_mask)
         if colisao_policial_3:
@@ -344,6 +348,8 @@ def jogo():
             policial_3.colidiu = True
             pontos_policial += 1
             tempo_restante -= 100
+            msg_tempo = fonte.render("-1 segundo!", False, (255, 255, 0))
+            tela.blit(msg_tempo, (500, 70))
 
         colisao_policial_4 = pygame.sprite.spritecollide(McLovin, grupo_policial_4, False, pygame.sprite.collide_mask)
         if colisao_policial_4:
@@ -351,6 +357,8 @@ def jogo():
             policial_4.colidiu = True
             pontos_policial += 1
             tempo_restante -= 100
+            msg_tempo = fonte.render("-1 segundo!", False, (255, 255, 0))
+            tela.blit(msg_tempo, (500, 70))
 
 
         tela.blit(img_carteira_pt, (20, 20))
@@ -366,7 +374,7 @@ def jogo():
         tela.blit(txt_policial, (largura_tela - 45, 20))
 
         todas_sprites.update()
-        if pontos_cerveja >= 1:
+        if pontos_cerveja >= 10:
             jogador_venceu = True
         if tempo_restante <= 0:
             jogador_morreu = True
