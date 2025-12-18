@@ -114,10 +114,13 @@ pontos_policial = 0
 sprite_policial_pt = pygame.image.load(os.path.join(diretorio_imagens, 'policial-pt.png')).convert_alpha()
 img_policial_pt = pygame.transform.scale(sprite_policial_pt, (sprite_policial_pt.get_width() // 12, sprite_policial_pt.get_height() // 12))
 
-jogadorMorreu = False
-telademorte = pygame.image.load(os.path.join(diretorio_imagens, 'tela-derrota.png')).convert()
-transformartelademorte = pygame.transform.scale(telademorte, (1280, 720))
-jogadorMorreu = False
+jogador_morreu = False
+tela_morte = pygame.image.load(os.path.join(diretorio_imagens, 'tela-derrota.png')).convert()
+transformar_tela_morte = pygame.transform.scale(tela_morte, (1280, 720))
+
+jogador_venceu = False
+#tela_vitoria = pygame.image.load(os.path.join(diretorio_imagens, 'tela-vitoria.png')).convert()
+#transformar_tela_vitoria = pygame.transform.scale(tela_vitoria, (1280, 720))
 
 # TEXTOS
 msg_reiniciar = 'Pressione (ESPAÇO) para reiniciar'
@@ -129,17 +132,18 @@ telainicial = pygame.image.load(os.path.join(diretorio_imagens, 'tela-inicial.pn
 transformarTelaInicial = pygame.transform.scale(telainicial, (1280, 720))
 
 # TEMPORIZADOR
+tempo_restante = 1100
 fonte = pygame.font.SysFont(None, 50)
-bonus = [0, 0]
-#FUNÇÂO TEMPO
-def timer(tempo):
-    lista = str(tempo)
+
+#FUNÇÃO TEMPO
+def timer(tempo_restante):
+    lista = str(tempo_restante)
     if len(lista) >= 4:
-        return lista[0]+lista[1]
+        return lista[0] + lista[1]
     elif len(lista) == 3:
         return lista[0]
     elif len(lista)  == 2:
-        return "0."+lista[0]
+        return "0." + lista[0]
     else:
         return 0
 
@@ -175,23 +179,24 @@ def iniciar_jogo():
         pygame.display.update()
 
 def recomecar_jogo():
-    global pontos_carteira, pontos_cerveja, pontos_detergente, pontos_policial, jogadorMorreu, self
+    global pontos_carteira, pontos_cerveja, pontos_detergente, pontos_policial, jogador_morreu, jogador_venceu, tempo_restante, self
     pontos_carteira = 0
     pontos_cerveja = 0
     pontos_detergente = 0
     pontos_policial = 0
-    jogadorMorreu = False
+    tempo_restante = 1100
+    jogador_morreu = False
+    jogador_venceu = False
     McLovin.rect.center = (200, altura_tela - 100)
 
-def gameOver(tela, transformartelademorte):
-    global jogadorMorreu, musica_jogo_rodando
+def vitoria(tela, transformar_tela_vitoria):
+    global jogador_venceu, musica_jogo_rodando
     musica_jogo.stop()
     musica_jogo_rodando = False
-    som_morte.play()
     esperando_reiniciar = True
     while esperando_reiniciar:
         relogio.tick(30)
-        tela.blit(transformartelademorte, (0, 0))
+        tela.blit(transformar_tela_vitoria, (0, 0))
         tela.blit(txt_reiniciar, ((10,5)))
         tela.blit(txt_sair, ((10,45)))
         pygame.display.update()
@@ -200,8 +205,38 @@ def gameOver(tela, transformartelademorte):
                 pygame.quit()
                 exit()
             if event.type == pygame.KEYDOWN:
-                if event.key ==pygame.K_ESCAPE:
-                    jogadorMorreu = False
+                if event.key == pygame.K_ESCAPE:
+                    jogador_venceu = False
+                    pygame.quit()
+                    exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    esperando_reiniciar = False
+                    try:
+                        #som_vitoria.stop()
+                        recomecar_jogo()
+                    except:
+                        print("O jogo não pôde ser reiniciado.")
+
+def gameOver(tela, transformar_tela_morte):
+    global jogador_morreu, musica_jogo_rodando
+    musica_jogo.stop()
+    musica_jogo_rodando = False
+    som_morte.play()
+    esperando_reiniciar = True
+    while esperando_reiniciar:
+        relogio.tick(30)
+        tela.blit(transformar_tela_morte, (0, 0))
+        tela.blit(txt_reiniciar, ((10,5)))
+        tela.blit(txt_sair, ((10,45)))
+        pygame.display.update()
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    jogador_morreu = False
                     pygame.quit()
                     exit()
             if event.type == pygame.KEYDOWN:
@@ -212,13 +247,14 @@ def gameOver(tela, transformartelademorte):
                         recomecar_jogo()
                     except:
                         print("O jogo não pôde ser reiniciado.")
-
+tempo_anterior = 0
 def jogo():
-    global pontos_carteira, pontos_cerveja, pontos_detergente, pontos_policial, jogadorMorreu, som_coleta1, som_coleta2, som_coleta3, musica_jogo_rodando, musica_titulo, musica_titulo_rodando
-    tempo_restante = 1100
+    global pontos_carteira, pontos_cerveja, pontos_detergente, pontos_policial, jogador_morreu, jogador_venceu, som_coleta1, som_coleta2, som_coleta3, musica_jogo_rodando, musica_titulo, musica_titulo_rodando, tempo_restante, tempo_anterior
     while True:
-        if jogadorMorreu:
-            gameOver(tela, transformartelademorte)
+        if jogador_morreu:
+            gameOver(tela, transformar_tela_morte)
+        #if jogador_venceu:
+            #vitoria(tela, transformar_tela_vitoria)
         if not musica_jogo_rodando:
             if musica_titulo_rodando:
                 musica_titulo.stop()
@@ -267,27 +303,25 @@ def jogo():
             som_coleta3.play()
             carteira.colidiu = True
             pontos_carteira += 1
-            bonus[0] += 1
-            if bonus[0] == 5:
-                tempo_restante += 500
-                bonus[0] = 0
+            tempo_restante += 100
+            msg_tempo = fonte.render("+1 segundos!", False, (255, 255, 0))
+            tela.blit(msg_tempo, (500, 70))
 
         colisao_cerveja = pygame.sprite.spritecollide(McLovin, grupo_cerveja, False, pygame.sprite.collide_mask)
         if colisao_cerveja:
             som_coleta1.play()
             cerveja.colidiu = True
             pontos_cerveja += 1
-            bonus[1] += 1
-            if bonus[1] == 10:
-                tempo_restante += 500
-                bonus[1] = 0
 
         colisao_detergente = pygame.sprite.spritecollide(McLovin, grupo_detergente, False, pygame.sprite.collide_mask)
         if colisao_detergente:
             som_coleta2.play()
             detergente.colidiu = True
             pontos_detergente += 1
-        
+            tempo_restante += 50
+            msg_tempo = fonte.render("+0.5 segundos!", False, (255, 255, 0))
+            tela.blit(msg_tempo, (500, 70))
+
         colisao_policial_1 = pygame.sprite.spritecollide(McLovin, grupo_policial_1, False, pygame.sprite.collide_mask)
         if colisao_policial_1:
             som_dano.play()
@@ -330,8 +364,10 @@ def jogo():
         tela.blit(txt_policial, (largura_tela - 45, 20))
 
         todas_sprites.update()
+        if pontos_cerveja >= 25:
+            jogador_venceu = True
         if tempo_restante <= 0:
-            jogadorMorreu = True
+            jogador_morreu = True
         pygame.display.flip()
 
 try:
