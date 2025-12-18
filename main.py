@@ -212,6 +212,7 @@ def jogo():
 
         if tempo_restante <= 0:
             jogadorMorreu = True
+            
 
 
 try:
