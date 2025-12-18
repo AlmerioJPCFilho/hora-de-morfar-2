@@ -90,7 +90,7 @@ pontos_cerveja = 0
 img_cerveja_pt = pygame.transform.scale(sprite_cerveja, (sprite_cerveja.get_width() // 12, sprite_cerveja.get_height() // 12))
 
 pontos_detergente = 0
-img_detergente_pt = pygame.transform.scale(sprite_detergente, (sprite_detergente.get_width() // 20, sprite_detergente.get_height() // 20))
+img_detergente_pt = pygame.transform.scale(sprite_detergente, (sprite_detergente.get_width() // 12, sprite_detergente.get_height() // 12))
 
 jogadorMorreu = False
 telademorte = pygame.image.load(os.path.join(diretorio_imagens, 'tela-derrota.png')).convert()
