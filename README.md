@@ -8,15 +8,16 @@
 ## Arquitetura:
 O código gira em torno de uma função principal que recebe os inputs, gerencia as atualizações da tela, as colisões com os objetos e o status de vitória ou derrota; uma função de game over e algumas funções para aleatorizar o spawn dos objetos, configurar o personagem, suas animações e movimentação.
 ## Capturas de tela:
-
+![Tela inicial](hora-de-morfar-2/imagens/print-tela-inicial.png)
+![Tela final](hora-de-morfar-2/imagens/print-tela-final.png)
 ## Ferramentas utilizadas:
 O projeto conta com ferramentas como a biblioteca pygame, culturalmente utilizada nesse primeiro projeto da disciplina e que permite a criação de jogos 2D em python; GitHub como sistema de versionamento do código, o Visual Studio Code como IDE, o chat GPT para criação de sprites e imagens e softwares de edição de imagem e áudio.
 ## Divisão de trabalho:
-- Almério: Implementação de sfx, revisão de código, organização e monitoramento do repositório, README e slides para apresentação.
-- Arthur: 
-- Eduardo: 
-- Jhoranes: 
-- João: Personagem principal e sua movimentação, estrutura dos coletáveis e modularização inicial.
+- Almério: Implementação de sfx, revisão de código, organização e monitoramento do repositório, e suporte no código.
+- Arthur: Suporte no código principal.
+- Eduardo: Telas de início, fim e suporte no código.
+- Jhoranes: Sprites, imagens e suporte no código.
+- João: Personagem principal e sua movimentação, estrutura dos coletáveis, modularização inicial e suporte no código.
 ## Conceitos implementados:
 Em nosso código utilizamos conceitos como:
 - Utilização e manipulação de funções para grande parte das funcionalidades;
@@ -26,9 +27,9 @@ Em nosso código utilizamos conceitos como:
 - Boas práticas para que o código fique organizado e fácil de ser entendido;
 - Versionamento de código para sincronizar os ambientes de todos os membros do grupo e manter o código sempre em sua melhor versão.
 ## Qual foi o maior erro cometido durante o projeto? Como vocês lidaram com ele?
-O projeto fluiu bem, sem erros grande, apenas detalhes perdidos que foram consertados rapidamente
+O projeto fluiu bem, sem grande erros, apenas detalhes perdidos que foram consertados rapidamente.
 ## Qual foi o maior desafio enfrentado durante o projeto? Como vocês lidaram com ele?
-O maior desafio foi aprender a modularizar o código, tendo em vista que os códigos desenvolvidos durante todo o período eram monolíticos.
+O maior desafio foi aprender a modularizar e versionar o código, tendo em vista que os códigos desenvolvidos durante todo o período eram monolíticos.
 ## Quais as lições aprendidas durante o projeto?
 Esse projeto foi o empurrão necessário para aprendermos organização de projetos, trabalho em equipe, versionamento de código e as ferramentas necessárias como POO e modularização.
 
