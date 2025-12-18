@@ -6,7 +6,7 @@
 - Jhoranes Gabriel Silva Alves (jgsa2)
 - João Azevedo Cavalcanti (jac2)
 ## Arquitetura:
-O código gira em torno de uma função principal que recebe os inputs, gerencia as atualizações da tela, as colisões com os objetos e o status de vitória ou derrota; uma função de game over e algumas funções para aleatorizar o spawn dos objetos, configurar o personagem, suas animações e movimentação.
+O código gira em torno de uma função principal que recebe os inputs, gerencia as atualizações da tela, as colisões com os objetos e o status de vitória ou derrota; uma função de tela inicial, uma função de game over e algumas funções para aleatorizar o spawn dos objetos, configurar o personagem, suas animações e movimentação.
 ## Capturas de tela:
 Tela inicial:
 ![Tela inicial](imagens/print-tela-inicial.png)
