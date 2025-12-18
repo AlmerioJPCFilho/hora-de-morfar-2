@@ -36,7 +36,10 @@ sprites_coletaveis = pygame.sprite.Group()
 background = pygame.image.load(os.path.join(diretorio_imagens, 'imagem-fundo.png')).convert()
 background = pygame.transform.scale(background, (largura_tela, altura_tela))
 
-#SONS
+# SONS
+musica_titulo = pygame.mixer.Sound(os.path.join(diretorio_audios, 'jonny-fabisak-title-cube.mp3'))
+musica_titulo.set_volume(0.5)
+musica_titulo_rodando = False
 musica_jogo = pygame.mixer.Sound(os.path.join(diretorio_audios, 'jonny-fabisak-blocky-blues.mp3'))
 musica_jogo.set_volume(0.5)
 musica_jogo_rodando = False
@@ -54,14 +57,14 @@ todas_sprites.add(McLovin)
 # COLETAVEIS
 # Carteira
 sprite_carteira = pygame.image.load(os.path.join(diretorio_imagens, 'identidade.png')).convert()
-carteira = Coletaveis(largura_tela, altura_tela, sprite_carteira, McLovin, fullscreen)
+carteira = Coletaveis(largura_tela, altura_tela,sprite_carteira, McLovin, fullscreen)
 todas_sprites.add(carteira)
 grupo_carteira = pygame.sprite.Group()
 grupo_carteira.add(carteira)
 
 # Cerveja
 sprite_cerveja = pygame.image.load(os.path.join(diretorio_imagens, 'cerveja.png')).convert_alpha()
-cerveja = Coletaveis(largura_tela, altura_tela, sprite_cerveja, McLovin, fullscreen)
+cerveja = Coletaveis(largura_tela, altura_tela,sprite_cerveja, McLovin, fullscreen)
 todas_sprites.add(cerveja)
 grupo_cerveja = pygame.sprite.Group()
 grupo_cerveja.add(cerveja)
@@ -73,15 +76,6 @@ todas_sprites.add(detergente)
 grupo_detergente = pygame.sprite.Group()
 grupo_detergente.add(detergente)
 
-def recomecar_jogo():
-    global pontos_carteira, pontos_cerveja, pontos_detergente, jogadorMorreu, self
-    pontos_carteira = 0
-    pontos_cerveja = 0
-    pontos_detergente = 0
-    jogadorMorreu = False
-    McLovin.rect.center = (200,altura_tela - 100)
-
-
 # PONTUAÇÃO
 pontos_carteira = 0
 img_carteira_pt = pygame.transform.scale(sprite_carteira, (sprite_carteira.get_width() // 12, sprite_carteira.get_height() // 12))
@@ -90,12 +84,59 @@ pontos_cerveja = 0
 img_cerveja_pt = pygame.transform.scale(sprite_cerveja, (sprite_cerveja.get_width() // 12, sprite_cerveja.get_height() // 12))
 
 pontos_detergente = 0
-img_detergente_pt = pygame.transform.scale(sprite_detergente, (sprite_detergente.get_width() // 20, sprite_detergente.get_height() // 20))
+img_detergente_pt = pygame.transform.scale(sprite_detergente, (sprite_detergente.get_width() // 12, sprite_detergente.get_height() // 12))
 
 jogadorMorreu = False
 telademorte = pygame.image.load(os.path.join(diretorio_imagens, 'tela-derrota.png')).convert()
 transformartelademorte = pygame.transform.scale(telademorte, (1280, 720))
 jogadorMorreu = False
+
+# TEXTOS
+msg_reiniciar = 'Pressione (ESPAÇO) para reiniciar'
+txt_reiniciar = fonte.render(msg_reiniciar, False, (130, 0, 0))
+msg_sair = 'Pressione (ESC) para sair'
+txt_sair = fonte.render(msg_sair, False, (130, 0, 0))
+
+telainicial = pygame.image.load(os.path.join(diretorio_imagens, 'tela-inicial.png')).convert()
+transformarTelaInicial = pygame.transform.scale(telainicial, (1280, 720))
+
+def iniciar_jogo():
+    global musica_titulo_rodando
+    retanguloTransparente = pygame.Surface((320, 60))
+    retanguloTransparente.set_alpha(100)
+    retanguloTransparente.fill((255, 255, 255)) 
+    rect_jogar = pygame.Rect(480, 420, 320, 60)
+    rect_sair = pygame.Rect(480, 510, 320, 60)
+    while True:
+        if not musica_titulo_rodando:
+            musica_titulo.play(-1)
+            musica_titulo_rodando = True
+        tela.blit(transformarTelaInicial, (0, 0))
+        mouse = pygame.mouse.get_pos()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1: 
+                    if rect_jogar.collidepoint(mouse):
+                        try:
+                            jogo()
+                        except:
+                            print("O jogo não pôde ser iniciado.")
+                    
+                    if rect_sair.collidepoint(mouse):
+                        pygame.quit()
+                        exit()
+        pygame.display.update()
+
+def recomecar_jogo():
+    global pontos_carteira, pontos_cerveja, pontos_detergente, jogadorMorreu, self
+    pontos_carteira = 0
+    pontos_cerveja = 0
+    pontos_detergente = 0
+    jogadorMorreu = False
+    McLovin.rect.center = (200, altura_tela - 100)
 
 def gameOver(tela, transformartelademorte):
     global jogadorMorreu, musica_jogo_rodando
@@ -103,18 +144,23 @@ def gameOver(tela, transformartelademorte):
     musica_jogo_rodando = False
     som_morte.play()
     esperando_reiniciar = True
-    
     while esperando_reiniciar:
         relogio.tick(30)
         tela.blit(transformartelademorte, (0, 0))
+        tela.blit(txt_reiniciar, ((10,5)))
+        tela.blit(txt_sair, ((10,45)))
         pygame.display.update()
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                jogadorMorreu = False
+            if event.type == QUIT:
                 pygame.quit()
                 exit()
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
+                if event.key ==pygame.K_ESCAPE:
+                    jogadorMorreu = False
+                    pygame.quit()
+                    exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
                     esperando_reiniciar = False
                     try:
                         som_morte.stop()
@@ -122,37 +168,21 @@ def gameOver(tela, transformartelademorte):
                     except:
                         print("O jogo não pôde ser reiniciado.")
 
-#Temporizador do Jogo:
-
-# Temporizador
-fonte = pygame.font.SysFont(None, 50)
-temporizador = pygame.time.Clock()
-
-def timer(tempo):
-    lista = str(tempo)
-    if len(lista) >= 4:
-        return lista[0]+lista[1]
-    elif len(lista) < 3:
-        return "0."+lista[0]
-    return lista[0]
-
 def jogo():
-    global pontos_carteira, pontos_cerveja, pontos_detergente, jogadorMorreu, som_coleta1, som_coleta2, som_coleta3, musica_jogo_rodando
-    tempo_restante = 1100
+    global pontos_carteira, pontos_cerveja, pontos_detergente, jogadorMorreu, som_coleta1, som_coleta2, som_coleta3, musica_jogo_rodando, musica_titulo, musica_titulo_rodando
     while True:
         if jogadorMorreu:
             gameOver(tela, transformartelademorte)
         if not musica_jogo_rodando:
+            if musica_titulo_rodando:
+                musica_titulo.stop()
+                musica_titulo_rodando = False
             musica_jogo.play(-1)
             musica_jogo_rodando = True
         relogio.tick(60)
         tela.fill(preto)
         tela.blit(background, (0, 0))
         todas_sprites.draw(tela)
-        tempo_restante -= 1.5
-        tempo_print = timer(int(tempo_restante))
-        mensagem = fonte.render(f"Tempo Restante: {tempo_print}", False, (255, 255, 255))
-        tela.blit(mensagem, (500, 20))
 
         msg_carteira = f': {pontos_carteira}'
         txt_carteira = fonte.render(msg_carteira, False, (255, 255, 255))
@@ -207,14 +237,11 @@ def jogo():
         tela.blit(txt_detergente, (75, 145))
 
         todas_sprites.update()
-
+        if pontos_detergente == 1:
+            jogadorMorreu = True
         pygame.display.flip()
 
-        if tempo_restante <= 0:
-            jogadorMorreu = True
-
-
 try:
-    jogo()
+    iniciar_jogo()
 except:
     print("O jogo não pôde ser iniciado.")
