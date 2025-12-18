@@ -3,7 +3,6 @@ from pygame.locals import *
 from sys import exit
 from personagem import Personagem
 from coletaveis import Coletaveis
-
 import os
 
 # inciando o pygame
@@ -38,7 +37,6 @@ background = pygame.image.load(os.path.join(diretorio_imagens, 'imagem-fundo.png
 background = pygame.transform.scale(background, (largura_tela, altura_tela))
 
 #SONS
-musica_titulo = pygame.mixer.Sound(os.path.join(diretorio_audios, 'jonny-fabisak-title-cube.mp3'))
 musica_jogo = pygame.mixer.Sound(os.path.join(diretorio_audios, 'jonny-fabisak-blocky-blues.mp3'))
 musica_jogo.set_volume(0.5)
 musica_jogo_rodando = False
@@ -68,11 +66,18 @@ todas_sprites.add(cerveja)
 grupo_cerveja = pygame.sprite.Group()
 grupo_cerveja.add(cerveja)
 
+# Detergente
+sprite_detergente = pygame.image.load(os.path.join(diretorio_imagens, 'detergente.png')).convert_alpha()
+detergente = Coletaveis(largura_tela, altura_tela, sprite_detergente, McLovin, fullscreen)
+todas_sprites.add(detergente)
+grupo_detergente = pygame.sprite.Group()
+grupo_detergente.add(detergente)
 
 def recomecar_jogo():
-    global pontos_carteira, pontos_cerveja, jogadorMorreu, self
+    global pontos_carteira, pontos_cerveja, pontos_detergente, jogadorMorreu, self
     pontos_carteira = 0
     pontos_cerveja = 0
+    pontos_detergente = 0
     jogadorMorreu = False
     McLovin.rect.center = (200,altura_tela - 100)
 
@@ -83,6 +88,10 @@ img_carteira_pt = pygame.transform.scale(sprite_carteira, (sprite_carteira.get_w
 
 pontos_cerveja = 0
 img_cerveja_pt = pygame.transform.scale(sprite_cerveja, (sprite_cerveja.get_width() // 12, sprite_cerveja.get_height() // 12))
+
+pontos_detergente = 0
+img_detergente_pt = pygame.transform.scale(sprite_detergente, (sprite_detergente.get_width() // 20, sprite_detergente.get_height() // 20))
+
 jogadorMorreu = False
 telademorte = pygame.image.load(os.path.join(diretorio_imagens, 'tela-derrota.png')).convert()
 transformartelademorte = pygame.transform.scale(telademorte, (1280, 720))
@@ -94,6 +103,7 @@ def gameOver(tela, transformartelademorte):
     musica_jogo_rodando = False
     som_morte.play()
     esperando_reiniciar = True
+    
     while esperando_reiniciar:
         relogio.tick(30)
         tela.blit(transformartelademorte, (0, 0))
@@ -113,7 +123,7 @@ def gameOver(tela, transformartelademorte):
                         print("O jogo não pôde ser reiniciado.")
 
 def jogo():
-    global pontos_carteira, pontos_cerveja, jogadorMorreu, som_coleta1, som_coleta2, som_coleta3, musica_jogo_rodando
+    global pontos_carteira, pontos_cerveja, pontos_detergente, jogadorMorreu, som_coleta1, som_coleta2, som_coleta3, musica_jogo_rodando
     while True:
         if jogadorMorreu:
             gameOver(tela, transformartelademorte)
@@ -131,6 +141,9 @@ def jogo():
         msg_cerveja = f': {pontos_cerveja}'
         txt_cerveja = fonte.render(msg_cerveja, False, (255, 255, 255))
 
+        msg_detergente = f': {pontos_detergente}'
+        txt_detergente = fonte.render(msg_detergente, False, (255, 255, 255))
+
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
@@ -147,19 +160,23 @@ def jogo():
             McLovin.mover_baixo()
 
         # colisão
-        colisao_carteira = pygame.sprite.spritecollide(
-            McLovin, grupo_carteira, False, pygame.sprite.collide_mask)
+        colisao_carteira = pygame.sprite.spritecollide(McLovin, grupo_carteira, False, pygame.sprite.collide_mask)
         if colisao_carteira:
-            som_coleta1.play()
+            som_coleta3.play()
             carteira.colidiu = True
             pontos_carteira += 1
 
-        colisao_cerveja = pygame.sprite.spritecollide(
-            McLovin, grupo_cerveja, False, pygame.sprite.collide_mask)
+        colisao_cerveja = pygame.sprite.spritecollide(McLovin, grupo_cerveja, False, pygame.sprite.collide_mask)
         if colisao_cerveja:
-            som_coleta3.play()
+            som_coleta1.play()
             cerveja.colidiu = True
             pontos_cerveja += 1
+
+        colisao_detergente = pygame.sprite.spritecollide(McLovin, grupo_detergente, False, pygame.sprite.collide_mask)
+        if colisao_detergente:
+            som_coleta2.play()
+            detergente.colidiu = True
+            pontos_detergente += 1
 
         tela.blit(img_carteira_pt, (20, 20))
         tela.blit(txt_carteira, (75, 18))
@@ -167,11 +184,13 @@ def jogo():
         tela.blit(img_cerveja_pt, (20, 70))
         tela.blit(txt_cerveja, (75, 72))
 
+        tela.blit(img_detergente_pt, (20, 140))
+        tela.blit(txt_detergente, (75, 145))
+
         todas_sprites.update()
-        if pontos_cerveja == 2:
+        if pontos_detergente == 5:
             jogadorMorreu = True
         pygame.display.flip()
-
 
 try:
     jogo()
